@@ -27,10 +27,21 @@ function App() {
   const [winner, setWinner] = useState(null); // 'X' | 'O' | 'draw' | null
   const [aiEnabled, setAiEnabled] = useState(true);
 
-  // Apply light theme to document root
+  // Initialize theme based on localStorage or system preference
   useEffect(() => {
-    document.documentElement.setAttribute('data-theme', 'light');
+    const stored = localStorage.getItem('theme');
+    let initial = stored || (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    setTheme(initial);
+    document.documentElement.setAttribute('data-theme', initial);
   }, []);
+
+  // Keep DOM updated when theme changes
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    try {
+      localStorage.setItem('theme', theme);
+    } catch {}
+  }, [theme]);
 
   // Derived values
   const currentPlayer = xIsNext ? PLAYERS.X : PLAYERS.O;
@@ -64,8 +75,7 @@ function App() {
 
   // PUBLIC_INTERFACE
   const toggleTheme = () => {
-    // Keeping only light for the brief; but honoring structure for future dark
-    setTheme((prev) => (prev === 'light' ? 'light' : 'light'));
+    setTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
   };
 
   // PUBLIC_INTERFACE
@@ -145,7 +155,7 @@ function App() {
               Restart
             </button>
             <button className="btn btn-secondary" onClick={toggleTheme} aria-label="Toggle theme">
-              Light Theme
+              {theme === 'light' ? 'Dark Theme' : 'Light Theme'}
             </button>
           </footer>
         </section>

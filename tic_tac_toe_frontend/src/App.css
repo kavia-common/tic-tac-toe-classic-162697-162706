@@ -4,6 +4,7 @@
   --secondary: #fbc02d;
   --accent: #d32f2f;
 
+  /* Light theme (default) */
   --bg: #ffffff;
   --surface: #f7f9fc;
   --text: #0f172a;
@@ -11,8 +12,29 @@
   --border: #e5e7eb;
   --shadow: 0 10px 20px rgba(2, 6, 23, 0.06), 0 6px 6px rgba(2, 6, 23, 0.04);
 
+  /* Component specific vars */
+  --card-bg: var(--surface);
+  --panel-bg: #ffffff;
+  --square-bg: #f8fafc;
+  --square-bg-hover: #f1f5f9;
+
   --radius: 14px;
   --radius-sm: 10px;
+}
+
+/* Dark theme overrides */
+:root[data-theme="dark"] {
+  --bg: #0b1220;           /* deep slate navy */
+  --surface: #111827;      /* near-black slate */
+  --text: #e5e7eb;         /* slate-200 */
+  --muted: #9aa4b2;        /* slate-400/300 mix for contrast */
+  --border: #253042;       /* slate-700-ish */
+  --shadow: 0 10px 20px rgba(0, 0, 0, 0.55), 0 6px 6px rgba(0,0,0,0.38);
+
+  --card-bg: #0f172a;      /* darker card background */
+  --panel-bg: #0b1324;     /* panels like status/board */
+  --square-bg: #0e1626;
+  --square-bg-hover: #111b2e;
 }
 
 * { box-sizing: border-box; }
@@ -37,7 +59,8 @@ body {
   justify-content: space-between;
   padding: 14px 20px;
   border-bottom: 1px solid var(--border);
-  background: rgba(255,255,255,0.8);
+  background: color-mix(in oklab, var(--bg) 85%, var(--panel-bg));
+  /* keep translucency on light, subtle on dark */
   backdrop-filter: blur(8px);
   position: sticky;
   top: 0;
@@ -68,7 +91,7 @@ body {
 .game-card {
   width: 100%;
   max-width: 520px;
-  background: var(--surface);
+  background: var(--card-bg);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
@@ -107,7 +130,7 @@ body {
   padding: 10px 12px;
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
-  background: #fff;
+  background: var(--panel-bg);
   font-weight: 600;
   color: var(--text);
 }
@@ -121,19 +144,19 @@ body {
   grid-template-columns: repeat(3, 1fr);
   gap: 8px;
   padding: 8px;
-  background: #fff;
+  background: var(--panel-bg);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
 }
 .board-disabled {
-  opacity: 0.8;
+  opacity: 0.85;
   filter: grayscale(0.1);
 }
 
 /* Square */
 .square {
-  background: #f8fafc;
+  background: var(--square-bg);
   border: 1px solid var(--border);
   border-radius: 12px;
   font-size: clamp(40px, 8.2vw, 76px);
@@ -147,8 +170,8 @@ body {
 }
 .square:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 8px 14px rgba(2, 6, 23, 0.08);
-  background: #f1f5f9;
+  box-shadow: 0 8px 14px rgba(2, 6, 23, 0.18);
+  background: var(--square-bg-hover);
 }
 .square:active:not(:disabled) {
   transform: translateY(0);
@@ -158,22 +181,23 @@ body {
   cursor: default;
   opacity: 1;
 }
+/* X / O accents keep accessible contrast on dark */
 .square-x {
   color: var(--primary);
-  border-color: rgba(25, 118, 210, 0.35);
-  background: rgba(25, 118, 210, 0.05);
+  border-color: color-mix(in oklab, var(--primary) 45%, var(--border));
+  background: color-mix(in oklab, var(--primary) 12%, transparent);
 }
 .square-o {
   color: var(--accent);
-  border-color: rgba(211, 47, 47, 0.35);
-  background: rgba(211, 47, 47, 0.05);
+  border-color: color-mix(in oklab, var(--accent) 45%, var(--border));
+  background: color-mix(in oklab, var(--accent) 12%, transparent);
 }
 
 /* Buttons */
 .btn {
   appearance: none;
   border: 1px solid var(--border);
-  background: #fff;
+  background: var(--panel-bg);
   color: var(--text);
   padding: 10px 14px;
   border-radius: 12px;
@@ -183,7 +207,7 @@ body {
 }
 .btn:hover {
   transform: translateY(-1px);
-  box-shadow: 0 6px 12px rgba(2, 6, 23, 0.08);
+  box-shadow: 0 6px 12px rgba(2, 6, 23, 0.28);
 }
 .btn:active {
   transform: translateY(0);
@@ -195,7 +219,7 @@ body {
   border-color: var(--primary);
 }
 .btn-outline {
-  background: #fff;
+  background: var(--panel-bg);
   color: var(--text);
 }
 .btn-secondary {
